@@ -1,10 +1,17 @@
 spring:
   application:
     name: spring-ai-rag
-  #Pass API key as environment variable, e.g. -DOPENAI_API_KEY=your-api-key
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rag
+    username: ai_user
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
   ai:
     openai:
+      #Pass API key as environment variable, e.g. -DOPENAI_API_KEY=your-api-key
       api-key: ${OPENAI_API_KEY}
     vectorstore:
-      simple:
-        enabled: true
+      pgvector:
+        initialize-schema: true
