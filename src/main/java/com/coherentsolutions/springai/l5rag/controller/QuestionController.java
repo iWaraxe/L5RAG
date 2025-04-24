@@ -1,6 +1,7 @@
 package com.coherentsolutions.springai.l5rag.controller;
 
 import com.coherentsolutions.springai.l5rag.model.Answer;
+import com.coherentsolutions.springai.l5rag.model.CombinedAnswer;
 import com.coherentsolutions.springai.l5rag.model.Question;
 import com.coherentsolutions.springai.l5rag.services.OpenAIService;
 import com.coherentsolutions.springai.l5rag.services.OpenAIServiceLlmImpl;
@@ -25,6 +26,14 @@ public class QuestionController {
     @PostMapping("/ask-rag")
     public Answer askQuestionRag(@RequestBody Question question) {
         return openAIServiceRag.getAnswer(question);
+    }
+
+    @PostMapping("/ask-combined")
+    public CombinedAnswer askCombined(@RequestBody Question question) {
+        Answer llm = openAIServiceLlm.getAnswer(question);
+        Answer rag = openAIServiceRag.getAnswer(question);
+
+        return new CombinedAnswer(llm.answer(), rag.answer());
     }
 
 }
