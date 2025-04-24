@@ -3,6 +3,8 @@ package com.coherentsolutions.springai.l5rag.controller;
 import com.coherentsolutions.springai.l5rag.model.Answer;
 import com.coherentsolutions.springai.l5rag.model.Question;
 import com.coherentsolutions.springai.l5rag.services.OpenAIService;
+import com.coherentsolutions.springai.l5rag.services.OpenAIServiceLlmImpl;
+import com.coherentsolutions.springai.l5rag.services.OpenAIServiceRagImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,11 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class QuestionController {
 
-    private final OpenAIService openAIService;
+    private final OpenAIServiceLlmImpl openAIServiceLlm;
+    private final OpenAIServiceRagImpl openAIServiceRag;
 
-    @PostMapping("/ask")
-    public Answer askQuestion(@RequestBody Question question) {
-        return openAIService.getAnswer(question);
+    @PostMapping("/ask-llm")
+    public Answer askQuestionLlm(@RequestBody Question question) {
+        return openAIServiceLlm.getAnswer(question);
+    }
+
+    @PostMapping("/ask-rag")
+    public Answer askQuestionRag(@RequestBody Question question) {
+        return openAIServiceRag.getAnswer(question);
     }
 
 }

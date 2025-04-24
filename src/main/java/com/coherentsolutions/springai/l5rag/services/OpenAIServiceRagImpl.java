@@ -2,6 +2,7 @@ package com.coherentsolutions.springai.l5rag.services;
 
 import com.coherentsolutions.springai.l5rag.model.Answer;
 import com.coherentsolutions.springai.l5rag.model.Question;
+import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -11,18 +12,16 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
+@Service
 public class OpenAIServiceRagImpl implements OpenAIService {
     private final ChatModel chatModel;
     private final VectorStore vectorStore;
-
-    public OpenAIServiceRagImpl(ChatModel chatModel, VectorStore vectorStore) {
-        this.chatModel = chatModel;
-        this.vectorStore = vectorStore;
-    }
 
     @Value("classpath:/templates/rag-prompt-template.st")
     private Resource ragPromptTemplate;
