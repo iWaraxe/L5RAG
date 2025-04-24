@@ -25,19 +25,23 @@ public class ChatClientConfig {
     public QuestionAnswerAdvisor questionAnswerAdvisor() throws IOException {
         /* ---------- 1. Build the SearchRequest (top-K etc.) ---------- */
         SearchRequest searchRequest = SearchRequest.builder()
-                .topK(5)                      // number of chunks
-                .similarityThreshold(0.80f)   // optional
+                .topK(7)                      // number of chunks
+                .similarityThreshold(0.70)   // optional
                 .build();
 
         /* ---------- 2. Load the prompt template file as String ---------- */
-        String userTextAdvise = Files.readString(
+        String userPrompt = Files.readString(
                 new ClassPathResource("templates/rag-advisor-template.st")
                         .getFile().toPath());
+
+        vectorStore.similaritySearch(searchRequest).forEach(doc ->
+                System.out.println("*** Retrieved chunk preview: " +
+                        doc.getText().substring(0,120)));
 
         /* ---------- 3. Build the advisor ---------- */
         return QuestionAnswerAdvisor.builder(vectorStore)
                 .searchRequest(searchRequest)
-                .userTextAdvise(userTextAdvise)   // << here!
+                .userTextAdvise(userPrompt)   // << here!
                 .build();
     }
 

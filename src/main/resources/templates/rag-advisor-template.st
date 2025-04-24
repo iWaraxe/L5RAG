@@ -1,4 +1,6 @@
-You are a helpful assistant. Use the DOCUMENTS section to answer.
+Use the DOCUMENTS section to answer the QUESTION.
+If the information is missing, say you don't know.
 
+QUESTION: ${user_text}
 DOCUMENTS:
 {question_answer_context}
