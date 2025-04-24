@@ -15,9 +15,9 @@ The documents are in a tabular dataset containing the following columns:
 - popularity: A numeric score representing viewer interest
 - production_companies: Names of companies that produced the film
 - release_date: When the movie was first released
-- budget: The production budget in USD
-- revenue: Total earnings in USD
-- runtime: The movie's duration in minutes
+- budget: The production budget in USD (USD, format as $0,000)
+- revenue: Total earnings in USD (USD, format as $0,000)
+- runtime: The movie's duration in minutes (display as hours and minutes)
 - status: Whether the movie is released, planned, etc.
 - tagline: A short slogan or promotional phrase for the movie
 - vote_average: Average user rating on a scale from 0–10

@@ -66,7 +66,7 @@ public class OpenAIServiceRagImpl implements OpenAIService {
         List<Document> documents = vectorStore.similaritySearch(
                 SearchRequest.builder()
                         .query(question.question()) // what the user is asking
-                        .topK(5)                    // how many similar documents to retrieve
+                        .topK(10)                    // how many similar documents to retrieve
                         .build()
         );
 
@@ -75,6 +75,10 @@ public class OpenAIServiceRagImpl implements OpenAIService {
         List<String> contentList = documents.stream()
                 .map(Document::getText)
                 .toList();
+
+        // Check contentList
+        System.out.println("Retrieved docs:");
+        contentList.forEach(System.out::println);
 
         // Step 3: Load and apply the prompt template, passing in both question and retrieved documents.
         // The prompt template is typically a file with placeholders for question and document context.
