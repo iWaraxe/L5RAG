@@ -3,7 +3,6 @@ package com.coherentsolutions.springai.l5rag.controller;
 import com.coherentsolutions.springai.l5rag.model.Answer;
 import com.coherentsolutions.springai.l5rag.model.CombinedAnswer;
 import com.coherentsolutions.springai.l5rag.model.Question;
-import com.coherentsolutions.springai.l5rag.services.OpenAIService;
 import com.coherentsolutions.springai.l5rag.services.OpenAIServiceLlmImpl;
 import com.coherentsolutions.springai.l5rag.services.OpenAIServiceRagImpl;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +34,6 @@ public class QuestionController {
 
         return new CombinedAnswer(llm.answer(), rag.answer());
     }
+
 
 }

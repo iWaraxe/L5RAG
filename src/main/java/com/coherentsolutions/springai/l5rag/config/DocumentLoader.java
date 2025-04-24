@@ -20,6 +20,7 @@ import java.util.List;
 public class DocumentLoader {
 
     private final VectorStore vectorStore;
+    private final TextSplitter textSplitter;
 
     @Value("classpath:/movies500.csv")
     private Resource csvFile;
@@ -38,12 +39,17 @@ public class DocumentLoader {
 
         log.info("Loaded {} document(s) from CSV file", docs.size());
 
-        TextSplitter splitter = new TokenTextSplitter();
-        List<Document> splitDocs = splitter.apply(docs);
+        List<Document> chunks = textSplitter.apply(docs);
 
-        log.info("Split document into {} chunks", splitDocs.size());
+        log.info("Split document into {} chunks", chunks.size());
 
-        vectorStore.add(splitDocs);
+        // for demo and debug purposes to visualize chunking
+        for (Document doc : chunks) {
+            System.out.println("Chunk length (chars): " + doc.getText().length());
+            System.out.println("Content: " + doc.getText().substring(0, 100) + "...");
+        }
+
+        vectorStore.add(chunks);
 
         log.info("Chunks added to vector store");
     }
