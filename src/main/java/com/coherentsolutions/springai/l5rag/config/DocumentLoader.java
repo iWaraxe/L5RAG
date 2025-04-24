@@ -26,6 +26,11 @@ public class DocumentLoader {
 
     @PostConstruct
     public void loadCsvUsingSimpleApproach() {
+        if (!vectorStore.similaritySearch("test").isEmpty()) {
+            log.info("Vector store already contains data — skipping re-ingestion.");
+            return;
+        }
+
         log.info("Loading document from file: {}", csvFile.getFilename());
 
         TikaDocumentReader reader = new TikaDocumentReader(csvFile);
