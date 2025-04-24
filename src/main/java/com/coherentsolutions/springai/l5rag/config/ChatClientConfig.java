@@ -31,7 +31,7 @@ public class ChatClientConfig {
 
         /* ---------- 2. Load the prompt template file as String ---------- */
         String userTextAdvise = Files.readString(
-                new ClassPathResource("templates/rag-prompt-template.st")
+                new ClassPathResource("templates/rag-advisor-template.st")
                         .getFile().toPath());
 
         /* ---------- 3. Build the advisor ---------- */
