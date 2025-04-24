@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
-public class OpenAIServiceImpl implements OpenAIService {
+public class OpenAIServiceLlmImpl implements OpenAIService {
 
     private final ChatModel chatModel;
 
