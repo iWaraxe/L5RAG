@@ -42,7 +42,7 @@ public class ChatClientConfig {
     }
 
     @Bean
-    public ChatClient chatClient(OpenAiChatModel model, QuestionAnswerAdvisor questionAnswerAdvisor) {
+    public ChatClient chatClient(OpenAiChatModel model, QuestionAnswerAdvisor questionAnswerAdvisor) throws IOException {
 
         String systemPrompt = Files.readString(
                 new ClassPathResource("templates/rag-advisor-template.st")
