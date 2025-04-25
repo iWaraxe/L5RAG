@@ -76,6 +76,8 @@ public class OpenAIServiceRagImpl implements OpenAIService {
                 .map(Document::getText)
                 .toList();
 
+        contentList.forEach(System.out::println);
+
         // Step 3: Load and apply the prompt template, passing in both question and retrieved documents.
         // The prompt template is typically a file with placeholders for question and document context.
         PromptTemplate promptTemplate = new PromptTemplate(ragPromptTemplate);
