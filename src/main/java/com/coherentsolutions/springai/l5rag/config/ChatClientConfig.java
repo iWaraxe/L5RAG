@@ -25,8 +25,8 @@ public class ChatClientConfig {
     public QuestionAnswerAdvisor questionAnswerAdvisor() throws IOException {
         /* ---------- 1. Build the SearchRequest (top-K etc.) ---------- */
         SearchRequest searchRequest = SearchRequest.builder()
-                .topK(7)                      // number of chunks
-                .similarityThreshold(0.70)   // optional
+                .topK(10)                      // number of chunks
+                .similarityThreshold(0.30)   // optional
                 .build();
 
         /* ---------- 2. Load the prompt template file as String ---------- */
@@ -34,21 +34,24 @@ public class ChatClientConfig {
                 new ClassPathResource("templates/rag-advisor-template.st")
                         .getFile().toPath());
 
-        vectorStore.similaritySearch(searchRequest).forEach(doc ->
-                System.out.println("*** Retrieved chunk preview: " +
-                        doc.getText().substring(0,120)));
-
         /* ---------- 3. Build the advisor ---------- */
         return QuestionAnswerAdvisor.builder(vectorStore)
                 .searchRequest(searchRequest)
-                .userTextAdvise(userPrompt)   // << here!
+                .userTextAdvise(userPrompt)
                 .build();
     }
 
     @Bean
     public ChatClient chatClient(OpenAiChatModel model, QuestionAnswerAdvisor questionAnswerAdvisor) {
 
+        String systemPrompt = Files.readString(
+                new ClassPathResource("templates/rag-advisor-template.st")
+                        .getFile().toPath());
+
         return ChatClient.builder(model)
+                // system-role message – shown to the model exactly once per call
+                .defaultSystem(systemPrompt)
+                // the advisor injects DOCUMENTS into the user-role message
                 .defaultAdvisors(questionAnswerAdvisor) // add more advisors here (.andThen(...))
                 .build();
     }
