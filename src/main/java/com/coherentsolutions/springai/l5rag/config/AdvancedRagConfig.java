@@ -1,27 +1,34 @@
 package com.coherentsolutions.springai.l5rag.config;
 
-import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
-import org.springframework.ai.vectorstore.retrieval.source.VectorStoreDocumentRetriever;
-import org.springframework.ai.vectorstore.context.postprocessor.DefaultContextPostProcessor;
-import org.springframework.ai.chat.client.prompt.PromptBuilder;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.transformer.splitter.TextSplitter;
-import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
+/**
+ * Advanced RAG Configuration - COMMENTED OUT FOR SPRING AI 1.0.0
+ * 
+ * This configuration demonstrates advanced RAG features that are planned for
+ * future versions of Spring AI. The RetrievalAugmentationAdvisor and related
+ * APIs are not yet available in Spring AI 1.0.0.
+ * 
+ * When these APIs become available, this configuration will demonstrate:
+ * - Advanced document retrieval strategies
+ * - Context post-processing
+ * - Custom prompt building
+ * - Multi-stage RAG pipelines
+ * 
+ * For now, use the QuestionAnswerAdvisor pattern in ChatClientConfig.
+ */
 @Configuration
 public class AdvancedRagConfig {
 
+    /*
+    // TODO: Uncomment when Spring AI includes RetrievalAugmentationAdvisor
+
     @Bean
     RetrievalAugmentationAdvisor ragAdvisor(VectorStore store, TextSplitter splitter) {
-        VectorStoreDocumentRetriever retriever = new VectorStoreDocumentRetriever.Builder()
-                .withVectorStore(store)
-                .withTopK(12)
-                .withSimilarityThreshold(0.4f)
+        VectorStoreDocumentRetriever retriever = VectorStoreDocumentRetriever.builder()
+                .vectorStore(store)
+                .topK(12)
+                .similarityThreshold(0.4)
                 .build();
 
         ContextPostProcessor postProcessor = new DefaultContextPostProcessor.Builder()
@@ -29,30 +36,22 @@ public class AdvancedRagConfig {
                 .withTokenLimit(2000)
                 .build();
 
-        PromptBuilder promptBuilder = (query, docs) -> List.of(
-                ChatClient.system("""
-            You are a movie-knowledge assistant.
-            If the answer is not in DOCUMENTS say "I don't know."
-            """),
-                ChatClient.user("""
-            QUESTION: %s
-            DOCUMENTS: %s
-            """.formatted(query, String.join("\n----\n", docs)))
-        );
+        QueryAugmenter queryAugmenter = ContextualQueryAugmenter.builder()
+                .allowEmptyContext(false)
+                .build();
 
-        return new RetrievalAugmentationAdvisor.Builder()
-                .withDocumentRetriever(retriever)
-                .withContextPostProcessor(postProcessor)
-                .withPromptBuilder(promptBuilder)
+        return RetrievalAugmentationAdvisor.builder()
+                .documentRetriever(retriever)
+                .queryAugmenter(queryAugmenter)
                 .build();
     }
 
     @Bean
-    ChatClient chatClient(OpenAiChatModel model,
-                          RetrievalAugmentationAdvisor ragAdvisor) {
-
+    ChatClient advancedRagChatClient(OpenAiChatModel model,
+                                   RetrievalAugmentationAdvisor ragAdvisor) {
         return ChatClient.builder(model)
                 .defaultAdvisors(ragAdvisor)
                 .build();
     }
+    */
 }
