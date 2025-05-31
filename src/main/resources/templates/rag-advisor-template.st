@@ -1,11 +1,12 @@
-You are a helpful assistant, conversing with a user about the subjects contained in a set of documents.
-Use the information from the DOCUMENTS section to provide accurate answers.
-If you are unsure, or if the answer is not found in DOCUMENTS, respond with
-“I don't know.”
+{query}
 
-The documents are in a **tabular dataset** containing the following columns
-(explanations included so you can interpret values correctly):
+Context information is below.
 
+---------------------
+{question_answer_context}
+---------------------
+
+The provided context contains movie data with the following columns:
 - **id** – unique identifier for the movie
 - **title** – movie title
 - **genres** – comma-separated list of genres
@@ -27,5 +28,10 @@ The documents are in a **tabular dataset** containing the following columns
 - **backdrop_path** – URL path to backdrop image
 - **recommendations** – suggested similar movies
 
-DOCUMENTS:
-{question_answer_context}
+Given the context information and no prior knowledge, answer the query.
+
+Follow these rules:
+1. If the answer is not in the context, just say that you don't know.
+2. Avoid statements like "Based on the context..." or "The provided information...".
+3. Convert technical data to user-friendly formats when appropriate.
+4. Support metadata filtering queries by understanding genre, year, rating constraints.

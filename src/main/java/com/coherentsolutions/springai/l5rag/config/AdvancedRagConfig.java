@@ -1,68 +1,79 @@
 package com.coherentsolutions.springai.l5rag.config;
 
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.PromptBuilder;
-import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
-import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.rag.context.postprocessor.DefaultContextPostProcessor;
-import org.springframework.ai.rag.context.postprocessor.ContextPostProcessor;
-import org.springframework.ai.rag.retrieval.source.VectorStoreDocumentRetriever;
-import org.springframework.ai.transformer.splitter.TextSplitter;
-import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
+/**
+ * Advanced RAG Configuration - COMMENTED OUT FOR SPRING AI 1.0.0
+ * 
+ * This configuration demonstrates advanced RAG features and metadata filtering
+ * that are planned for future versions of Spring AI. The RetrievalAugmentationAdvisor
+ * and related APIs are not yet available in Spring AI 1.0.0.
+ * 
+ * When these APIs become available, this configuration will demonstrate:
+ * - Advanced document retrieval strategies  
+ * - Context post-processing with token limits
+ * - Custom prompt building
+ * - Multi-stage RAG pipelines
+ * - Dynamic metadata filtering
+ * - Document deduplication
+ * 
+ * For now, use the QuestionAnswerAdvisor pattern in ChatClientConfig
+ * which supports basic metadata filtering via FILTER_EXPRESSION parameter.
+ */
 @Configuration
 public class AdvancedRagConfig {
 
+    /*
+    // TODO: Uncomment when Spring AI includes RetrievalAugmentationAdvisor and related APIs
+
     @Bean
-    QuestionAnswerAdvisor ragAdvisor(VectorStore store,
-                                     TextSplitter splitter) {
+    RetrievalAugmentationAdvisor ragAdvisor(VectorStore store, TextSplitter splitter) {
+        // 1. Document retriever with metadata filtering
+        VectorStoreDocumentRetriever retriever = VectorStoreDocumentRetriever.builder()
+                .vectorStore(store)
+                .topK(12)
+                .similarityThreshold(0.4)
+                // Dynamic filtering - example: only animation movies
+                .filterExpression(() -> "genres == 'Animation'")
+                .build();
 
-        /* 1.  Document retriever */
-        VectorStore retriever =
-                VectorStoreDocumentRetriever.builder()
-                        .vectorStore(store)
-                        .topK(12)
-                        .similarityThreshold(0.4f)
-                        // .filterExpression(() -> "genres = 'Animation'")
-                        .build();
+        // 2. Context post-processor (deduplication + token cap)
+        ContextPostProcessor postProcessor = DefaultContextPostProcessor.builder()
+                .textSplitter(splitter)
+                .tokenLimit(2000)
+                .deduplicationEnabled(true)
+                .build();
 
-        /* 2.  Post-processor (dedup + 2 000-token cap) */
-        ContextPostProcessor post =
-                new DefaultContextPostProcessor(splitter, 2_000);
-
-        /* 3.  Prompt builder */
-        PromptBuilder promptBuilder = (query, docs) -> List.of(
-                ChatClient.system("""
-                        You are a movie-knowledge assistant.
-                        If the answer is not in DOCUMENTS say "I don't know."
-                        """),
-                ChatClient.user("""
-                        QUESTION:
-                        %s
-                        
-                        DOCUMENTS:
-                        %s
-                        """.formatted(query, String.join("\n----\n", docs)))
-        );
+        // 3. Query augmenter for context injection
+        QueryAugmenter queryAugmenter = ContextualQueryAugmenter.builder()
+                .allowEmptyContext(false)
+                .promptTemplate(customTemplate)
+                .build();
 
         return RetrievalAugmentationAdvisor.builder()
                 .documentRetriever(retriever)
-                .contextPostProcessor(post)
-                .promptBuilder(promptBuilder)
+                .queryAugmenter(queryAugmenter)
                 .build();
     }
 
-    @Bean
-    ChatClient chatClient(OpenAiChatModel model,
-                          RetrievalAugmentationAdvisor ragAdvisor) {
-
+    @Bean 
+    ChatClient metadataFilteringChatClient(OpenAiChatModel model,
+                                         RetrievalAugmentationAdvisor ragAdvisor) {
         return ChatClient.builder(model)
                 .defaultAdvisors(ragAdvisor)
                 .build();
     }
+
+    // Demonstration of runtime metadata filtering
+    public String askWithGenreFilter(String question, String genre) {
+        return chatClient.prompt()
+                .user(question)
+                .advisors(a -> a.param(
+                    VectorStoreDocumentRetriever.FILTER_EXPRESSION, 
+                    "genres == '" + genre + "'"
+                ))
+                .call()
+                .content();
+    }
+    */
 }
