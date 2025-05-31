@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git log:*)",
+      "Bash(chmod:*)",
+      "Bash(./update-to-spring-ai-1.0.0.sh:*)",
+      "Bash(git checkout:*)",
+      "Bash(./mvnw:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": []
+  }
+}
